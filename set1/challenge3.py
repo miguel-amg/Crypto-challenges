@@ -34,7 +34,7 @@ def combinations(input: bytes):
 
     return result
     
-# Very simple scoring system that checks the frequency of the caraters
+# Very simple scoring system that checks the frequency of the most used caraters
 def scoring(text: str):
     result = 0
 
@@ -43,11 +43,11 @@ def scoring(text: str):
         or letter.lower() == 'w' or letter.lower() == 'y':
               result += 1
         
-        if not letter.isalpha():
-            result -= 1
+        # If a char thats not used in the english alphabet appears then we will give it a score of 0
+        if letter != '\'' and letter != ' ' and not letter.isalpha():
+            return 0
     
     return result
-
 
 # Checks every possible key and ranks every result
 def brute_force(input: bytes):
