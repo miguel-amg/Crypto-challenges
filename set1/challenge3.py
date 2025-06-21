@@ -3,6 +3,9 @@
 # | Miguel Guimarães                 |
 # +----------------------------------+
 
+# Imports
+import string
+
 # Xor function
 def xor (input1: bytes, input2: bytes):
     if len(input1) != len(input2): raise ValueError('The input sizes must be the same for XOR.') 
@@ -22,7 +25,7 @@ def combinations(input: bytes):
     result = []
 
     # Iterate all keys (all bytes possible)
-    for i in range(0,255):
+    for i in range(0,256):
         temp = bytearray(input)
         
         # XOR every byte with the current key 'i'
@@ -36,15 +39,18 @@ def combinations(input: bytes):
     
 # Very simple scoring system that checks the frequency of the most used caraters
 def scoring(text: str):
+    frequent_letters = set('aeiouwy')
+    alphabet = set(string.ascii_lowercase)
+    extras = {'\''} | {' '} | {'\n'}
+    
     result = 0
-
+    
     for letter in text:
-        if letter.lower() == 'a' or letter.lower() == 'e' or letter.lower() == 'i' or letter.lower() == 'o' or letter.lower() == 'u' \
-        or letter.lower() == 'w' or letter.lower() == 'y':
+        if letter.lower() in frequent_letters:
               result += 1
         
         # If a char thats not used in the english alphabet appears then we will give it a score of 0
-        if letter != '\'' and letter != ' ' and not letter.isalpha():
+        if (letter.lower() not in extras) and (letter.lower() not in alphabet):
             return 0
     
     return result
@@ -54,15 +60,19 @@ def brute_force(input: bytes):
     results = []
     combs = combinations(input)
 
+    # Iterate every result from applying every key (single byte xor)
     for comb in combs:
-        comb_str = comb.decode("utf-8", errors="ignore")
-        score = scoring(comb_str)
-
-        results.append((score, comb_str)) 
+        try:
+            comb_str = comb.decode("utf-8")
+        except UnicodeDecodeError:
+            pass
+        else:
+            score = scoring(comb_str)
+            results.append((score, comb_str)) 
         
     ranked = sorted(results, key=lambda x: x[0], reverse=True)
 
-    return ranked   
+    return ranked    
     
 ########################################################################################################################
 
