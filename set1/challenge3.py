@@ -75,10 +75,11 @@ def brute_force(input: bytes):
     return ranked    
     
 ########################################################################################################################
+# Main function
+if __name__ == "__main__":
+    input_hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+    input_bytes = bytearray.fromhex(input_hex)
 
-input_hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-input_bytes = bytearray.fromhex(input_hex)
-
-print(brute_force(input_bytes))
+    print(brute_force(input_bytes)[0])
 
 # The result is 'Cooking MC's like a pound of bacon'
