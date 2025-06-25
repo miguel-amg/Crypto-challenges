@@ -55,8 +55,8 @@ def scoring(text: str):
 
     return result 
 
-# Returns the best result from brute-forcing
-def brute_force_best(input: bytes):
+# Returns the best result from brute-forcing (single byte xor cipher)
+def brute_force_sbx(input: bytes):
     best_result_str = ""
     best_result_score = 0
 
@@ -84,16 +84,17 @@ def get_all_best_scores(input_file):
     list = []
     for line in input_file:
         line_bytes = bytearray.fromhex(line)
-        list.append(brute_force_best(line_bytes))
+        list.append(brute_force_sbx(line_bytes))
 
     sorted_list = sorted(list, key=lambda x: x[0], reverse=True)
 
     return sorted_list[0]
 
 ########################################################################################################################
-
-input_file = open("files/input_challenge4.txt")
-score, line = get_all_best_scores(input_file)
-print(line)
+# Main function
+if __name__ == "__main__":
+    input_file = open("files/input_challenge4.txt")
+    score, line = get_all_best_scores(input_file)
+    print(line)
 
 # The result is 'Now that the party is jumping'
