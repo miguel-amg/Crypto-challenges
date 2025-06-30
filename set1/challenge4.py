@@ -25,15 +25,15 @@ def combinations(input: bytes):
     result = []
 
     # Iterate all keys (all bytes possible)
-    for i in range(0,256):
+    for key in range(0,256):
         temp = bytearray(input)
         
-        # XOR every byte with the current key 'i'
+        # XOR every byte with the current key
         for w in range(0, size):
-            temp[w] = temp[w] ^ i          
+            temp[w] = temp[w] ^ key          
         
         # Store the xor of the input with the current key
-        result.append(bytes(temp))
+        result.append((key, bytes(temp)))
 
     return result
     
@@ -59,11 +59,12 @@ def scoring(text: str):
 def brute_force_sbx(input: bytes):
     best_result_str = ""
     best_result_score = 0
+    best_result_key = b''
 
     combs = combinations(input)
 
     # Iterate every result from applying every key (single byte xor)
-    for comb in combs:
+    for key, comb in combs:
         try:
             comb_str = comb.decode("utf-8")
         except UnicodeDecodeError:
@@ -74,10 +75,11 @@ def brute_force_sbx(input: bytes):
             # Store the score if it is the best
             if (score > best_result_score): 
                 best_result_score = score
-                best_result_str = comb_str 
+                best_result_str = comb_str
+                best_result_key = key 
 
     # Return tuple with the best score and its corresponding string
-    return (best_result_score, best_result_str)
+    return (best_result_score, best_result_str, best_result_key)
 
 # Gets the best brute-force score/output for each line in a file
 def get_all_best_scores(input_file):
@@ -94,7 +96,8 @@ def get_all_best_scores(input_file):
 # Main function
 if __name__ == "__main__":
     input_file = open("files/input_challenge4.txt")
-    score, line = get_all_best_scores(input_file)
+    score, line, key = get_all_best_scores(input_file)
     print(line)
+    
 
 # The result is 'Now that the party is jumping'
